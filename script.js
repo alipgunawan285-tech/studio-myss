@@ -99,7 +99,7 @@ Terima kasih!`;
 
     // Buat tautan WhatsApp
     const urlWhatsApp =
-      "https://wa.me/" +
+      "https://wa.me/6282318204751" +
       nomorAdmin +
       "?text=" +
       encodeURIComponent(pesan);
