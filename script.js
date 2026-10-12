@@ -1,25 +1,30 @@
+
 "use strict";
 
-// Nomor WhatsApp admin MYSS Studio
+// NOMOR WHATSAPP ADMIN MYSS STUDIO
 const nomorAdmin = "6282318204751";
 
-// 1. Tahun otomatis di footer
+// ==============================
+// 1. TAHUN FOOTER OTOMATIS
+// ==============================
 const yearElement = document.getElementById("year");
 
 if (yearElement) {
   yearElement.textContent = new Date().getFullYear();
 }
 
-// 2. Menu navigasi HP
+// ==============================
+// 2. MENU NAVIGASI HP
+// ==============================
 const menuToggle = document.getElementById("menuToggle");
 const navLinks = document.getElementById("navLinks");
 
 if (menuToggle && navLinks) {
   menuToggle.addEventListener("click", function () {
-    const menuTerbuka = navLinks.classList.toggle("open");
+    const terbuka = navLinks.classList.toggle("open");
 
-    menuToggle.textContent = menuTerbuka ? "✕" : "☰";
-    menuToggle.setAttribute("aria-expanded", String(menuTerbuka));
+    menuToggle.textContent = terbuka ? "✕" : "☰";
+    menuToggle.setAttribute("aria-expanded", String(terbuka));
   });
 
   navLinks.querySelectorAll("a").forEach(function (link) {
@@ -31,17 +36,16 @@ if (menuToggle && navLinks) {
   });
 }
 
-// 3. Tombol layanan mengisi formulir secara otomatis
-const tombolLayanan = document.querySelectorAll(".service-link");
-
-tombolLayanan.forEach(function (button) {
+// ==============================
+// 3. TOMBOL PILIH LAYANAN
+// ==============================
+document.querySelectorAll(".service-link").forEach(function (button) {
   button.addEventListener("click", function () {
-    const layananDipilih = button.dataset.service;
-    const pilihanLayanan = document.getElementById("layanan");
+    const layanan = document.getElementById("layanan");
     const bagianPesan = document.getElementById("pesan");
 
-    if (pilihanLayanan && layananDipilih) {
-      pilihanLayanan.value = layananDipilih;
+    if (layanan) {
+      layanan.value = button.dataset.service;
     }
 
     if (bagianPesan) {
@@ -53,7 +57,9 @@ tombolLayanan.forEach(function (button) {
   });
 });
 
-// 4. Formulir pesanan menuju WhatsApp
+// ==============================
+// 4. PESANAN LANGSUNG KE WHATSAPP
+// ==============================
 const orderForm = document.getElementById("orderForm");
 
 if (orderForm) {
@@ -68,30 +74,28 @@ if (orderForm) {
 
     const formMessage = document.getElementById("formMessage");
 
-    // Periksa data wajib
+    // Periksa isian wajib
     if (!nama || !kelas || !layanan || !detail) {
       if (formMessage) {
         formMessage.textContent =
-          "Mohon isi nama, kelas, layanan, dan detail tugas.";
+          "Lengkapi nama, kelas, layanan, dan detail tugas terlebih dahulu.";
       }
       return;
     }
 
-    // Susun pesan pesanan
-    const pesan = [
-      "Halo MYSS Studio! Saya ingin memesan jasa.",
-      "",
-      "Nama: " + nama,
-      "Kelas: " + kelas,
-      "Layanan: " + layanan,
-      "Mata pelajaran: " + (mapel || "-"),
-      "",
-      "Detail tugas:",
-      detail,
-      "",
-      "Mohon informasi harga dan estimasi pengerjaannya.",
-      "Terima kasih!"
-    ].join("\n");
+    // Susun pesan WhatsApp
+    const pesan = `Halo MYSS Studio! Saya ingin memesan jasa.
+
+Nama: ${nama}
+Kelas: ${kelas}
+Layanan: ${layanan}
+Mata pelajaran: ${mapel || "-"}
+
+Detail tugas:
+${detail}
+
+Mohon informasi harga dan estimasi pengerjaan.
+Terima kasih!`;
 
     // Buat tautan WhatsApp
     const urlWhatsApp =
@@ -100,13 +104,7 @@ if (orderForm) {
       "?text=" +
       encodeURIComponent(pesan);
 
-    // Buka WhatsApp
-    window.open(urlWhatsApp, "_blank");
-
-    if (formMessage) {
-      formMessage.textContent =
-        "Pesanan disiapkan. Silakan lanjutkan pengiriman melalui WhatsApp.";
-    }
+    // LANGSUNG PINDAH KE WHATSAPP
+    window.location.assign(urlWhatsApp);
   });
-      }
-
+}
