@@ -1,50 +1,63 @@
-// GANTI dengan nomor WhatsApp admin MYSS Studio.
-// Format Indonesia: 628xxxxxxxxxx
+"use strict";
+
+// Nomor WhatsApp admin MYSS Studio
 const nomorAdmin = "6282318204751";
 
-// Tahun otomatis di footer
-document.getElementById("year").textContent =
-  new Date().getFullYear();
+// 1. Tahun otomatis di footer
+const yearElement = document.getElementById("year");
 
-// Menu navigasi untuk HP
+if (yearElement) {
+  yearElement.textContent = new Date().getFullYear();
+}
+
+// 2. Menu navigasi HP
 const menuToggle = document.getElementById("menuToggle");
 const navLinks = document.getElementById("navLinks");
 
-menuToggle.addEventListener("click", function () {
-  navLinks.classList.toggle("open");
+if (menuToggle && navLinks) {
+  menuToggle.addEventListener("click", function () {
+    const menuTerbuka = navLinks.classList.toggle("open");
 
-  const menuTerbuka = navLinks.classList.contains("open");
-
-  menuToggle.textContent = menuTerbuka ? "✕" : "☰";
-  menuToggle.setAttribute("aria-expanded", menuTerbuka);
-});
-
-// Tutup menu setelah link dipilih
-navLinks.querySelectorAll("a").forEach(function (link) {
-  link.addEventListener("click", function () {
-    navLinks.classList.remove("open");
-    menuToggle.textContent = "☰";
-    menuToggle.setAttribute("aria-expanded", "false");
+    menuToggle.textContent = menuTerbuka ? "✕" : "☰";
+    menuToggle.setAttribute("aria-expanded", String(menuTerbuka));
   });
-});
 
-// Tombol layanan mengisi jenis layanan pada formulir
-document.querySelectorAll(".service-link").forEach(function (button) {
-  button.addEventListener("click", function () {
-    const layananDipilih = button.dataset.service;
-
-    document.getElementById("layanan").value = layananDipilih;
-
-    document.getElementById("pesan").scrollIntoView({
-      behavior: "smooth"
+  navLinks.querySelectorAll("a").forEach(function (link) {
+    link.addEventListener("click", function () {
+      navLinks.classList.remove("open");
+      menuToggle.textContent = "☰";
+      menuToggle.setAttribute("aria-expanded", "false");
     });
   });
+}
+
+// 3. Tombol layanan mengisi formulir secara otomatis
+const tombolLayanan = document.querySelectorAll(".service-link");
+
+tombolLayanan.forEach(function (button) {
+  button.addEventListener("click", function () {
+    const layananDipilih = button.dataset.service;
+    const pilihanLayanan = document.getElementById("layanan");
+    const bagianPesan = document.getElementById("pesan");
+
+    if (pilihanLayanan && layananDipilih) {
+      pilihanLayanan.value = layananDipilih;
+    }
+
+    if (bagianPesan) {
+      bagianPesan.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+  });
 });
 
-// Formulir pesanan WhatsApp
-document.getElementById("orderForm").addEventListener(
-  "submit",
-  function (event) {
+// 4. Formulir pesanan menuju WhatsApp
+const orderForm = document.getElementById("orderForm");
+
+if (orderForm) {
+  orderForm.addEventListener("submit", function (event) {
     event.preventDefault();
 
     const nama = document.getElementById("nama").value.trim();
@@ -52,36 +65,48 @@ document.getElementById("orderForm").addEventListener(
     const layanan = document.getElementById("layanan").value;
     const mapel = document.getElementById("mapel").value.trim();
     const detail = document.getElementById("detail").value.trim();
-    const pesanStatus = document.getElementById("formMessage");
 
+    const formMessage = document.getElementById("formMessage");
+
+    // Periksa data wajib
     if (!nama || !kelas || !layanan || !detail) {
-      pesanStatus.textContent =
-        "Mohon isi semua bagian yang wajib diisi.";
+      if (formMessage) {
+        formMessage.textContent =
+          "Mohon isi nama, kelas, layanan, dan detail tugas.";
+      }
       return;
     }
 
-    
-    }
+    // Susun pesan pesanan
+    const pesan = [
+      "Halo MYSS Studio! Saya ingin memesan jasa.",
+      "",
+      "Nama: " + nama,
+      "Kelas: " + kelas,
+      "Layanan: " + layanan,
+      "Mata pelajaran: " + (mapel || "-"),
+      "",
+      "Detail tugas:",
+      detail,
+      "",
+      "Mohon informasi harga dan estimasi pengerjaannya.",
+      "Terima kasih!"
+    ].join("\n");
 
-    const pesan =
-`Halo MYSS Studio! Saya ingin memesan jasa.
-
-Nama: ${nama}
-Kelas: ${kelas}
-Layanan: ${layanan}
-Mata pelajaran: ${mapel || "-"}
-
-Detail tugas:
-${detail}
-
-Mohon informasi harga dan estimasi pengerjaannya. Terima kasih!`;
-
+    // Buat tautan WhatsApp
     const urlWhatsApp =
       "https://wa.me/" +
       nomorAdmin +
       "?text=" +
       encodeURIComponent(pesan);
 
+    // Buka WhatsApp
     window.open(urlWhatsApp, "_blank");
-  }
-);
+
+    if (formMessage) {
+      formMessage.textContent =
+        "Pesanan disiapkan. Silakan lanjutkan pengiriman melalui WhatsApp.";
+    }
+  });
+      }
+
