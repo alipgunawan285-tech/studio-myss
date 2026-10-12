@@ -60,11 +60,7 @@ document.getElementById("orderForm").addEventListener(
       return;
     }
 
-    // Pastikan nomor admin sudah diganti
-    if (nomorAdmin === "6282318204751") {
-      pesanStatus.textContent =
-        "Nomor admin masih contoh. Ganti nomorAdmin di script.js terlebih dahulu.";
-      return;
+    
     }
 
     const pesan =
